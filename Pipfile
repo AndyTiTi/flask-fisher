@@ -1,0 +1,18 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+requests = "*"
+wtforms = "*"
+http = "*"
+flask-sqlalchemy = {path = "D:/Ñ¸À×ÏÂÔØ/Flask_SQLAlchemy-2.3.2-py2.py3-none-any.whl"}
+cymysql = "*"
+flask-login = "*"
+
+[requires]
+python_version = "3.6"
