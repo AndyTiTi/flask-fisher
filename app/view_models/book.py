@@ -47,6 +47,7 @@ class BookViewModel:
         self.publisher = data['publisher']
         self.image = data['image']
         self.price = '￥' + data['price'] if data['price'] else data['price']
+        self.isbn = data['isbn']
         # self.isbn = get_isbn(data)
         # self.pubdate = data['pubdate']
         self.summary = data['summary']
