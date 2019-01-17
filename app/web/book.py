@@ -1,6 +1,8 @@
 from app.view_models.book import BookViewModel, BookCollection
 from flask import render_template, flash, request, jsonify
 # from flask_login import current_user
+from app.models.gift import Gift
+from app.models.wish import Wish
 
 from . import web
 from app.libs.helper import is_isbn_or_key
@@ -76,8 +78,8 @@ def book_detail(isbn):
     #
     book = BookViewModel(yushu_book.first)
     # # if has_in_gifts:
-    # trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
-    # trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
+    trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
+    trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
     # trade_wishes_model = TradeInfo(trade_wishes)
     # trade_gifts_model = TradeInfo(trade_gifts)
     return render_template('book_detail.html', book=book, wishes=[], gifts=[])
