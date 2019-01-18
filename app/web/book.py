@@ -1,8 +1,11 @@
+from flask_login import current_user
+
 from app.view_models.book import BookViewModel, BookCollection
 from flask import render_template, flash, request, jsonify
 # from flask_login import current_user
 from app.models.gift import Gift
 from app.models.wish import Wish
+from app.view_models.trade import TradeInfo
 
 from . import web
 from app.libs.helper import is_isbn_or_key
@@ -66,41 +69,24 @@ def book_detail(isbn):
     # 获取图书信息
     yushu_book = YuShuBook()
     yushu_book.search_by_isbn(isbn)
-
-    # if current_user.is_authenticated:
-    #     # 如果未登录，current_user将是一个匿名用户对象
-    #     if Gift.query.filter_by(uid=current_user.id, isbn=isbn,
-    #                             launched=False).first():
-    #         has_in_gifts = True
-    #     if Wish.query.filter_by(uid=current_user.id, isbn=isbn,
-    #                             launched=False).first():
-    #         has_in_wishes = True
-    #
     book = BookViewModel(yushu_book.first)
+
+    if current_user.is_authenticated:
+        # 如果未登录，current_user将是一个匿名用户对象
+        if Gift.query.filter_by(uid=current_user.id, isbn=isbn,
+                                launched=False).first():
+            has_in_gifts = True
+        if Wish.query.filter_by(uid=current_user.id, isbn=isbn,
+                                launched=False).first():
+            has_in_wishes = True
+
     # # if has_in_gifts:
     trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
     trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
-    # trade_wishes_model = TradeInfo(trade_wishes)
-    # trade_gifts_model = TradeInfo(trade_gifts)
-    return render_template('book_detail.html', book=book, wishes=[], gifts=[])
-    # return render_template('book_detail.html', book=book, has_in_gifts=has_in_gifts,
-    # has_in_wishes=has_in_wishes,
-    # wishes=trade_wishes_model,
-    # gifts=trade_gifts_model)
-    # if has_in_wishes or (not has_in_gifts and not has_in_wishes):
-    #     trade_gifts = Gift.query.filter_by(isbn=isbn, status=1, launched=False).all()
-    #     trade_wishes_count = Wish.query.filter_by(isbn=isbn, launched=False,
-    #                                               status=1).count()
-    #     trade_gifts_model = GiftsViewModel.view_model_trade_info(trade_gifts)
-    #     return render_template('book_detail.html', book=book, has_in_gifts=has_in_gifts,
-    #                            has_in_wishes=has_in_wishes,
-    #                            gifts=trade_gifts_model['trade'],
-    #                            wishes_count=trade_wishes_count,
-    #                            gifts_count=trade_gifts_model['total'])
-
-    # trade_gifts_count = Gift.query.filter_by(isbn=isbn, launched=False, status=1).count()
-    # trade_wishes_count = Wish.query.filter_by(isbn=isbn, launched=False, status=1).count()
-    # return render_template('book_detail.html', book=book, has_in_gifts=has_in_gifts,
-    #                        has_in_wish_list=has_in_wishes,
-    #                        wishes_count=trade_wishes_count,
-    #                        gifts_count=trade_gifts_count)
+    trade_wishes_model = TradeInfo(trade_wishes)
+    trade_gifts_model = TradeInfo(trade_gifts)
+    return render_template('book_detail.html', book=book,
+                           wishes=trade_wishes_model,
+                           has_in_gifts=has_in_gifts,
+                           has_in_wishes=has_in_wishes,
+                           gifts=trade_gifts_model)

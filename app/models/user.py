@@ -4,6 +4,8 @@ from sqlalchemy import Column, Integer, String, Boolean, Float
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login_manager
+from app.models.gift import Gift
+from app.models.wish import Wish
 from app.spider.yushu_book import YuShuBook
 
 
@@ -38,14 +40,14 @@ class User(UserMixin, Base):
         yushu_book.search_by_isbn(isbn)
         if not yushu_book.first:
             return False
-            # 不允许一个用户同时赠送多本相同的书
-            # launched表示 如果有书但没送出去，你也不能上传书
-            gifting = Gift.query.filter_by(uid=self.id, isbn=isbn, launched=False).first()
-            wishing = Wish.query.filter_by(uid=self.id, isbn=isbn, launched=False).first()
-            if not gifting and not wishing:
-                return True
-            else:
-                return False
+        # 不允许一个用户同时赠送多本相同的书
+        # launched表示 如果有书但没送出去，你也不能上传书
+        gifting = Gift.query.filter_by(uid=self.id, isbn=isbn, launched=False).first()
+        wishing = Wish.query.filter_by(uid=self.id, isbn=isbn, launched=False).first()
+        if not gifting and not wishing:
+            return True
+        else:
+            return False
 
 
 @login_manager.user_loader

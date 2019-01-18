@@ -18,7 +18,14 @@ class SQLAlchemy(_SQLAlchemy):
                 raise e
 
 
-db = SQLAlchemy()
+class Query(BaseQuery):  # 继承BaseQuery， 并重写filter_by
+    def filter_by(self, **kwargs):
+        if 'status' not in kwargs.keys():
+            kwargs['status'] = 1  # 在**kwargs字典中加入status即可
+        return super(Query, self).filter_by(**kwargs)
+
+
+db = SQLAlchemy(query_class=Query)  # 传入query_class
 
 
 class Base(db.Model):
@@ -29,13 +36,13 @@ class Base(db.Model):
     def __init__(self):
         self.create_time = int(datetime.now().timestamp())
 
-    # @property
-    # def create_datetime(self):
-    #     if self.create_time:
-    #         return datetime.fromtimestamp(self.create_time)
-    #     else:
-    #         return None
-    #
+    @property
+    def create_datetime(self):
+        if self.create_time:
+            return datetime.fromtimestamp(self.create_time)
+        else:
+            return None
+
     # def delete(self):
     #     self.status = 0
 
