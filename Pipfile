@@ -10,9 +10,10 @@ flask = "*"
 requests = "*"
 wtforms = "*"
 http = "*"
-flask-sqlalchemy = {path = "D:/я╦ювобть/Flask_SQLAlchemy-2.3.2-py2.py3-none-any.whl"}
+flask-sqlalchemy = "*"
 cymysql = "*"
 flask-login = "*"
+flask-mail = "*"
 
 [requires]
 python_version = "3.6"
