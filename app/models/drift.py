@@ -1,11 +1,12 @@
+from app.libs.enums import PendingStatus
 from .base import Base
 from sqlalchemy import Column, Integer, String, SmallInteger
 
 
 class Drift(Base):
-    '''
+    """
     一次具体的交易信息
-    '''
+    """
     id = Column(Integer, primary_key=True)
 
     # 邮寄信息
@@ -29,5 +30,21 @@ class Drift(Base):
     gift_id = Column(Integer)
     gifter_nickname = Column(String(20))
 
-    pending = Column('pending', SmallInteger, default=1)  # 状态
+    _pending = Column('pending', SmallInteger, default=1)  # 状态
 
+    @property
+    def pending(self):
+        """
+        读取_pending,转化为枚举类型
+        :return:
+        """
+        return PendingStatus(self._pending)
+
+    @pending.setter
+    def pending(self, status):
+        """
+        把枚举转化为_pending
+        :param status:
+        :return:
+        """
+        self._pending = status.value
