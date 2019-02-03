@@ -76,7 +76,7 @@ class User(UserMixin, Base):
             send_receive=str(self.send_counter) + '/' + str(self.receive_counter)
         )
 
-    def check_password(self, raw):  # 检查传入密码是否正确
+    def check_password(self, raw):  # 检查用户输入的密码是否正确，对比用户输入的明文密码与数据库的加密密码是否一致
         return check_password_hash(self._password, raw)
 
     def can_save_to_list(self, isbn):
