@@ -32,6 +32,12 @@ class LoginForm(Form):
 class EmailForm(Form):
     email = StringField(validators=[DataRequired(), Length(min=8, max=64), Email(message='电子邮件格式错误')])
 
+class ChangePasswordForm(Form):
+    old_password = PasswordField('原有密码', validators=[DataRequired()])
+    new_password1 = PasswordField('新密码', validators=[
+        DataRequired(), Length(6, 10, message='密码长度至少需要在6到20个字符之间'),
+        EqualTo('new_password2', message='两次输入的密码不一致')])
+    new_password2 = PasswordField('确认新密码字段', validators=[DataRequired()])
 
 class ResetPasswordForm(Form):
     passowrd1 = PasswordField(validators=[DataRequired(), Length(6, 32, message='密码长度在6-32个字符之间'), ])
